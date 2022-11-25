@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 22.0, color: Colors.white),
           bodyMedium: TextStyle(fontSize: 18.0, color: Colors.white),
-          bodySmall: TextStyle(fontSize: 14.0,color: Colors.white),
+          bodySmall: TextStyle(fontSize: 14.0, color: Colors.white),
         ),
       ),
       home: const MyHomePage(title: 'Agalarla Maç v.0.0.1'),
@@ -38,12 +38,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
 
-  final screens = [
-    FixturePage(),
-    ProfilePage(),
-  ];
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,39 +45,47 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Center(child: Text(widget.title)),
         backgroundColor: Palette.appSwatch.shade100,
       ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-            indicatorColor: Colors.blue.shade100,
-            labelTextStyle: MaterialStateProperty.all(
-              TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-            )
-        ),
-        child: NavigationBar(
-          height: 60,
-          backgroundColor: Palette.appSwatch.shade700,
-          selectedIndex: index,
-          onDestinationSelected: (value) =>
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: Palette.appSwatch.shade800,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: neonGreen,
+        selectedIconTheme: IconThemeData(size: 32),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.scoreboard),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apps_rounded),
+            label: 'icon2',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Text',
+          )
+        ],
+        onTap: (value) {
           setState(() {
             index = value;
-          }),
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.email_outlined),
-              label: 'Mail',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.menu),
-              label: 'Menu',
-            )
-          ],
-        ),
+          });
+          if (value == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ProfilePage();
+                },
+              ),
+            );
+          }
+        },
+        currentIndex: index,
+        elevation: 20,
       ),
       backgroundColor: Palette.appSwatch.shade200,
-      body: screens[index],
+      body: FixturePage(),
     );
   }
 }
@@ -105,7 +107,9 @@ class FixturePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return FixtureBlock();
               },
-              separatorBuilder: (context, index) => SizedBox(height: 8,),
+              separatorBuilder: (context, index) => SizedBox(
+                height: 8,
+              ),
             ),
           ),
         ],
@@ -123,20 +127,23 @@ class FixtureBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(18),),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Palette.appSwatch.shade300,
-              Palette.appSwatch.shade500,
-            ],
-          ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(18),
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Palette.appSwatch.shade300,
+            Palette.appSwatch.shade500,
+          ],
+        ),
       ),
       child: Column(
         children: [
           SizedBox(height: 10),
-          Text('Super Lig',
+          Text(
+            'Super Lig',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           SizedBox(height: 5),
@@ -144,19 +151,23 @@ class FixtureBlock extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text('Galatasaray',
+              Text(
+                'Galatasaray',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              Text('-',
+              Text(
+                '-',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              Text('Fenerbahçe',
+              Text(
+                'Fenerbahçe',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
           SizedBox(height: 10),
-          Text('19.00',
+          Text(
+            '19.00',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           SizedBox(height: 10),
@@ -165,19 +176,24 @@ class FixtureBlock extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
-                  onPressed: () {},
-                  child: Text('Açık Eventler',
-                  style: TextStyle(color: Color(0xff1be2c7))),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
+                onPressed: () {},
+                child: Text('Açık Eventler',
+                    style: TextStyle(color: Color(0xff1be2c7))),
               ),
               SizedBox(width: 20),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))), backgroundColor: Color(0xff1be2c7)),
-                onPressed: () {},
-                child: Text('Event Aç >',
-                  style: TextStyle(color: Palette.appSwatch.shade300),
-                )
-              ),
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      backgroundColor: Color(0xff1be2c7)),
+                  onPressed: () {},
+                  child: Text(
+                    'Event Aç >',
+                    style: TextStyle(color: Palette.appSwatch.shade300),
+                  )),
             ],
           ),
           SizedBox(height: 10),
