@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/cupertino.dart';
 import 'fixturepage.dart';
+import 'notificationpage.dart';
 import 'profilepage.dart';
 import 'themecolors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 22.0, color: Colors.white),
           bodyMedium: TextStyle(fontSize: 18.0, color: Colors.white),
-          bodySmall: TextStyle(fontSize: 14.0, color: Colors.white),
+          bodySmall: TextStyle(fontSize: 15.0, color: Colors.white),
         ),
       ),
       home: BottomNavBar(),
@@ -70,6 +72,7 @@ class BottomNavBar extends StatelessWidget {
 List<Widget> _buildScreens() {
   return [
     FixturePage(),
+    NotificationPage(),
     ProfilePage()
   ];
 }
@@ -77,17 +80,24 @@ List<Widget> _buildScreens() {
 List<PersistentBottomNavBarItem> _navBarsItems() {
   return [
     PersistentBottomNavBarItem(
-      icon: Icon(Icons.home),
-      inactiveIcon: Icon(Icons.home_outlined),
+      icon: Icon(Icons.scoreboard),
+      inactiveIcon: Icon(Icons.scoreboard_outlined),
       title: ("Home"),
-      activeColorPrimary: CupertinoColors.activeBlue,
+      activeColorPrimary: neonGreen,
+      inactiveColorPrimary: CupertinoColors.systemGrey,
+    ),
+    PersistentBottomNavBarItem(
+      icon: Icon(Icons.notifications),
+      inactiveIcon: Icon(Icons.notifications_none_outlined),
+      title: ("Notifications"),
+      activeColorPrimary: neonGreen,
       inactiveColorPrimary: CupertinoColors.systemGrey,
     ),
     PersistentBottomNavBarItem(
       icon: Icon(Icons.person),
       inactiveIcon: Icon(Icons.person_outline),
       title: ("Settings"),
-      activeColorPrimary: CupertinoColors.activeBlue,
+      activeColorPrimary: neonGreen,
       inactiveColorPrimary: CupertinoColors.systemGrey,
     ),
   ];

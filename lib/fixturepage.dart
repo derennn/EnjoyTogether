@@ -10,22 +10,24 @@ class FixturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.appSwatch.shade200,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: ListView.separated(
-                itemCount: 12,
-                itemBuilder: (context, index) {
-                  return const FixtureBlock();
-                },
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 8,
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: ListView.separated(
+                  itemCount: 12,
+                  itemBuilder: (context, index) {
+                    return const FixtureBlock();
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 8,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
