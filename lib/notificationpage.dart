@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'dart:async';
 import 'themecolors.dart';
 import 'package:agalarla_mac/repositories/notifications_repository.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
-  NotificationPage({Key? key}) : super(key: key);
+  NotificationPage({
+    Key? key,
+    required this.mainScreenContext,
+    required this.onScreenHideButtonPressed,
+    required this.hideStatus,
+  }) : super(key: key);
+
+  final BuildContext mainScreenContext;
+  final VoidCallback onScreenHideButtonPressed;
+  final bool hideStatus;
 
   @override
   _NotificationPageState createState() => _NotificationPageState();
@@ -19,31 +29,26 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   }
 
   void path() async {
-    imagePath = await Future.delayed(Duration(seconds: 1)).then((value) => getImagePath());
+    imagePath = await Future.delayed(const Duration(seconds: 1)).then((value) => getImagePath());
     setState(() {});
     //print('gorsel geldi');
   }
+
 
   @override
   void initState() {
     getImagePath();
     path();
+    Future.delayed(const Duration(seconds: 3)).then((value) => ref.read(notificationProvider2.notifier).update((state) => !state));
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    ref.read(notificationsProvider.notifier).sifirla();
-    print('${ref.read(notificationsProvider)}'); //widget dispose olmuyor, o problemi çöz
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Palette.appSwatch.shade400,
+      backgroundColor: Palette.appSwatch.shade500,
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(
@@ -53,50 +58,79 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 28),
               ),
               const Divider(
-                color: Colors.white,
+                thickness: 1,
+                color: Colors.grey,
                 height: 25,
               ),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: 7,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        trailing: ref.watch(notificationsProvider)
-                        ? DecoratedBox(
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: neonGreen),
-                          child: SizedBox(
-                            height: 8,
-                            width: 8,
-                          ),
-                        )
-                        : null,
-                        leading: ClipOval(
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            child: imagePath == null
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : Image.network(imagePath!),
-                            decoration: BoxDecoration(shape: BoxShape.circle),
-                          ),
+              ListView.separated(
+                itemCount: 7,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      trailing: AnimatedContainer(
+                        height: 8,
+                        width: 8,
+                        duration: const Duration(milliseconds: 400),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: ref.watch(notificationProvider2) ? neonGreen : Colors.transparent),
+                      ),
+                      leading: ClipOval(
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: const BoxDecoration(shape: BoxShape.circle),
+                          child: imagePath == null
+                          ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                          : Image.network(imagePath!),
                         ),
-                        title: Text('Alp 19 Aralık Galatasaray Fenerbahçe maçı için event açtı.',
-                        style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                      );
-                    },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      color: Colors.white,
-                      indent: 8,
-                      endIndent: 8,
-                      height: 4,
+                      ),
+                      title: Text('Alp 19 Aralık GS - FB maçı için event açtı.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     );
                   },
-                ),
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    color: Colors.grey,
+                    thickness: 0.5,
+                    indent: 8,
+                    endIndent: 8,
+                    height: 4,
+                  );
+                },
+              ),
+              FloatingActionButton(
+                backgroundColor: neonGreen,
+                  onPressed: () {
+                    PersistentNavBarNavigator.pushNewScreen(
+                      context,
+                      screen: Scaffold(
+                        backgroundColor: Palette.appSwatch.shade500,
+                        body: SafeArea(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Center(child: Text('Deneme')),
+                             FloatingActionButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  },
+                               child: const Text('Back',
+                               textAlign: TextAlign.center,),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      withNavBar: true, // OPTIONAL VALUE. True by default.
+                      pageTransitionAnimation: PageTransitionAnimation.slideUp,
+                    );
+                  },
+                child: const Text('new page',
+                textAlign: TextAlign.center),
               ),
             ],
           ),

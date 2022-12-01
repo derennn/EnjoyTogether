@@ -11,6 +11,8 @@ void main() {
   runApp(ProviderScope(child: MyApp()));
 }
 
+late BuildContext testContext;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,6 +21,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Palette.appSwatch,
+                )
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Palette.appSwatch,
+                )
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Palette.appSwatch,
+                )
+            ),
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
+        ),
         primarySwatch: Palette.appSwatch,
         fontFamily: 'Roboto',
         textTheme: const TextTheme(
@@ -27,78 +47,154 @@ class MyApp extends StatelessWidget {
           bodySmall: TextStyle(fontSize: 15.0, color: Colors.white),
         ),
       ),
-      home: BottomNavBar(),
+      home: LoginScreen(),
+      initialRoute: "/",
+      routes: {},
     );
   }
 }
 
-class BottomNavBar extends StatelessWidget {
-  BottomNavBar({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({final Key? key}) : super(key: key);
 
-  PersistentTabController _controller = PersistentTabController(initialIndex: 0);
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  Widget build(final BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text("Login Screen"),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                child: const Text("Log in"),
+                onPressed: () => PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: MainPage(
+                    mainScreenContext: context,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key, required this.mainScreenContext}) : super(key: key);
+
+  final BuildContext mainScreenContext;
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  PersistentTabController _controller = PersistentTabController();
+  bool _hideNavBar = false;
+
+  List<Widget> _buildScreens() => [
+        FixturePage(
+          mainScreenContext: widget.mainScreenContext,
+          hideStatus: _hideNavBar,
+          onScreenHideButtonPressed: () {
+            setState(() {
+              _hideNavBar = !_hideNavBar;
+            });
+          },
+        ),
+        NotificationPage(
+          mainScreenContext: widget.mainScreenContext,
+          hideStatus: _hideNavBar,
+          onScreenHideButtonPressed: () {
+            setState(() {
+              _hideNavBar = !_hideNavBar;
+            });
+          },
+        ),
+        ProfilePage(
+          mainScreenContext: widget.mainScreenContext,
+          hideStatus: _hideNavBar,
+          onScreenHideButtonPressed: () {
+            setState(() {
+              _hideNavBar = !_hideNavBar;
+            });
+          },
+        ),
+      ];
+
+  List<PersistentBottomNavBarItem> _navBarsItems() => [
+        PersistentBottomNavBarItem(
+            icon: const Icon(Icons.home),
+            inactiveIcon: const Icon(Icons.home_outlined),
+            title: "Home",
+            activeColorPrimary: neonGreen,
+            inactiveColorPrimary: Colors.white),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.notifications),
+          inactiveIcon: const Icon(Icons.notifications_none_outlined),
+          title: "Profile",
+          activeColorPrimary: neonGreen,
+          inactiveColorPrimary: Colors.white,
+          routeAndNavigatorSettings: RouteAndNavigatorSettings(
+            initialRoute: "/",
+            routes: {
+              //"/first": (final context) => const MainScreen2(),
+              //"/second": (final context) => const MainScreen3(),
+            },
+          ),
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.person),
+          inactiveIcon: const Icon(Icons.person_outline),
+          title: "Profile",
+          activeColorPrimary: neonGreen,
+          inactiveColorPrimary: Colors.white,
+          routeAndNavigatorSettings: RouteAndNavigatorSettings(
+            initialRoute: "/",
+            routes: {
+              //"/first": (final context) => const MainScreen2(),
+              //"/second": (final context) => const MainScreen3(),
+            },
+          ),
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems(),
-      confineInSafeArea: true,
-      backgroundColor: Palette.appSwatch.shade700, // Default is Colors.white.
-      handleAndroidBackButtonPress: true, // Default is true.
-      resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-      stateManagement: true, // Default is true.
-      hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-      decoration: NavBarDecoration(
-        colorBehindNavBar: Palette.appSwatch.shade600,
-      ),
-      popAllScreensOnTapOfSelectedTab: true,
-      popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: const ItemAnimationProperties( // Navigation Bar's items animation properties.
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
-      screenTransitionAnimation: const ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
-        animateTabTransition: true,
-        curve: Curves.ease,
-        duration: Duration(milliseconds: 200),
-      ),
-      navBarStyle: NavBarStyle.style5, // Choose the nav bar style with this property.
-    );
+    return Scaffold(
+        body: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+          resizeToAvoidBottomInset: true,
+          navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
+              ? 0.0
+              : kBottomNavigationBarHeight,
+          bottomScreenMargin: 0,
+          selectedTabScreenContext: (final context) {
+            testContext = context!;
+          },
+          backgroundColor: Palette.appSwatch.shade500,
+          hideNavigationBar: _hideNavBar,
+          decoration:
+              const NavBarDecoration(colorBehindNavBar: Palette.appSwatch),
+          itemAnimationProperties: const ItemAnimationProperties(
+            duration: Duration(milliseconds: 400),
+            curve: Curves.ease,
+          ),
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            animateTabTransition: true,
+          ),
+          navBarStyle: NavBarStyle.style5,
+        ));
   }
-}
-
-List<Widget> _buildScreens() {
-  return [
-    FixturePage(),
-    NotificationPage(),
-    ProfilePage()
-  ];
-}
-
-List<PersistentBottomNavBarItem> _navBarsItems() {
-  return [
-    PersistentBottomNavBarItem(
-      icon: Icon(Icons.scoreboard),
-      inactiveIcon: Icon(Icons.scoreboard_outlined),
-      title: ("Home"),
-      activeColorPrimary: neonGreen,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(Icons.notifications),
-      inactiveIcon: Icon(Icons.notifications_none_outlined),
-      title: ("Notifications"),
-      activeColorPrimary: neonGreen,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(Icons.person),
-      inactiveIcon: Icon(Icons.person_outline),
-      title: ("Settings"),
-      activeColorPrimary: neonGreen,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-  ];
 }

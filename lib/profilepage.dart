@@ -5,7 +5,14 @@ import 'themecolors.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({
     Key? key,
+    required this.mainScreenContext,
+    required this.onScreenHideButtonPressed,
+    required this.hideStatus,
   }) : super(key: key);
+
+  final BuildContext mainScreenContext;
+  final VoidCallback onScreenHideButtonPressed;
+  final bool hideStatus;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -18,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Palette.appSwatch.shade400,
+        backgroundColor: Palette.appSwatch.shade500,
         body: SafeArea(
           child: Center(
             child: Column(
