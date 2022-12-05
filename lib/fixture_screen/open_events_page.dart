@@ -69,12 +69,11 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
                   return ref.refresh(eventsListProvider);
                 },
                 child: ref.watch(eventsListProvider).when(
-                  data: (data) => ListView.separated(
+                  data: (data) => ListView.builder(
                     physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                       shrinkWrap: false,
                       itemBuilder: (context, index) =>
-                          EventContainer(event : data[index]),
-                      separatorBuilder: (context, index) => const Divider(),
+                          EventContainer(event : data[index], index: index),
                       itemCount: data.length,
                     ),
                   error: (error, stackTrace) {
@@ -93,25 +92,51 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
   }
 }
 
-class EventContainer extends ConsumerWidget {
+class EventContainer extends ConsumerStatefulWidget {
   const EventContainer({
     Key? key,
     required this.event,
+    required this.index,
   }) : super(key: key);
 
   final Event event;
+  final int index;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      height: 100,
-      width: MediaQuery.of(context).size.width - 20,
-      decoration: BoxDecoration(
-          color: Palette.appSwatch.shade700,
-          borderRadius: BorderRadius.all(Radius.circular(24))),
-      child: Center(
-        child: Text(event.lokasyon),
-      ),
+  _EventContainerState createState() => _EventContainerState();
+}
+
+class _EventContainerState extends ConsumerState<EventContainer> {
+
+  bool selected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          tileColor: Palette.appSwatch.shade700,
+          title: Text('Lokasyon: ${widget.event.lokasyon}\nArkadaş getirmek serbest: ${widget.event.arkadasGetirmekSerbestMi ? 'Evet' : 'Hayır'}',
+          style: TextStyle(fontSize: 12, color: Colors.white)),
+          trailing: Text('Grup: ${widget.event.arkadasGrubu}',
+              style: TextStyle(fontSize: 12, color: Colors.white),
+          ),
+          contentPadding: EdgeInsets.all(12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(18))
+          ),
+          selectedTileColor: Palette.appSwatch.shade600,
+          selected: ref.watch(selectedTileProvider) == widget.index,
+          onTap: () {
+            setState(() {
+              ref.read(selectedTileProvider.notifier).state = widget.index;
+            });
+          },
+        ),
+        SizedBox(height: 4,),
+      ],
     );
   }
 }
+
+final selectedTileProvider = StateProvider<int?>((ref) => null);
