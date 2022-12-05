@@ -1,7 +1,9 @@
+import 'package:agalarla_mac/services/data_services.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agalarla_mac/themecolors.dart';
+import 'package:agalarla_mac/event/event_class.dart';
 
 class FixtureEventButtonHero extends StatelessWidget {
   const FixtureEventButtonHero({
@@ -48,12 +50,55 @@ class CreateEventPage extends ConsumerStatefulWidget {
   _CreateEventPageState createState() => _CreateEventPageState();
 }
 
-enum radio1 { evet, hayir }
-
 class _CreateEventPageState extends ConsumerState<CreateEventPage> {
+
   final Map<String, dynamic> values = {};
   final _formKey = GlobalKey<FormState>();
-  radio1? _radioSecilen;
+  bool? _radioSecilen;
+  bool isSaving = false;
+
+
+  Future<void> saveFunc (value) async {
+
+      try {
+        setState(() {
+          isSaving = true;
+        });
+        await convertToEventMapAndSave();
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Event açıldı! Lokasyon: ${values['lokasyon']}, Arkadaş grubu: ${values['arkadasGrubu']}, Arkadaş getirmek serbest: ${values['arkadasGetirmekSerbestMi'] ? 'Evet' : 'Hayır'}',
+            ),
+            backgroundColor: Palette.appSwatch.shade700,
+          ),
+        );
+      } catch (e) {
+        setState(() {
+          isSaving = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Event açılırken bir sorun oluştu. Lütfen daha sonra tekrar deneyin ${e}',
+            ),
+            backgroundColor: Palette.appSwatch.shade700,
+          ),
+        );
+      } finally {
+        setState(() {
+          isSaving = false;
+        });
+      }
+  }
+
+  Future<void> convertToEventMapAndSave() async {
+    await ref.read(dataServiceProvider).addEvent(
+        Event.fromMap(values)
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +109,10 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            DecoratedBox(
+            Container(
+              constraints: const BoxConstraints(
+                minHeight: 150,
+              ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -200,9 +248,9 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                     title: Text('Evet',
                                     style: Theme.of(context).textTheme.bodySmall,
                                     ),
-                                    leading: Radio<radio1>(
+                                    leading: Radio<bool>(
                                       fillColor: MaterialStateColor.resolveWith((states) => neonGreen),
-                                      value: radio1.evet,
+                                      value: true,
                                       groupValue: _radioSecilen,
                                       onChanged: (value) {
                                         setState(() {
@@ -217,9 +265,9 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                     title: Text('Hayır',
                                       style: Theme.of(context).textTheme.bodySmall,
                                     ),
-                                    leading: Radio<radio1>(
+                                    leading: Radio<bool>(
                                       fillColor: MaterialStateColor.resolveWith((states) => neonGreen),
-                                      value: radio1.hayir,
+                                      value: false,
                                       groupValue: _radioSecilen,
                                       onChanged: (value) {
                                         setState(() {
@@ -244,36 +292,38 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                           },
                         ),
                         const SizedBox(height: 10),
-                        Material(
-                          color: Palette.appSwatch.shade500,
-                          child: Hero(
-                            tag: widget.index.toString(),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                                  backgroundColor: Color(0xff1be2c7)),
-                              onPressed: () {
-                                final formState = _formKey.currentState;
-                                if (formState == null) return print('formState == null');
-                                if (formState.validate() == true) {
-                                  formState.save();
-                                  saveFunc(values);
-                                }
-                              },
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Text(
-                                  'Event Aç',
-                                  style: TextStyle(
-                                      color: Palette.appSwatch.shade300, fontSize: 18),
-                                  textAlign: TextAlign.center,
+                        isSaving
+                        ?  const Center(child: CircularProgressIndicator())
+                        :  Material(
+                            color: Palette.appSwatch.shade500,
+                            child: Hero(
+                              tag: widget.index.toString(),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                    backgroundColor: Color(0xff1be2c7)),
+                                onPressed: () {
+                                  final formState = _formKey.currentState;
+                                  if (formState == null) return print('formState == null');
+                                  if (formState.validate() == true) {
+                                    formState.save();
+                                    saveFunc(values);
+                                  }
+                                },
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    'Event Aç',
+                                    style: TextStyle(
+                                        color: Palette.appSwatch.shade300, fontSize: 18),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -285,16 +335,4 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
       ),
     );
   }
-
-  void saveFunc (value) {
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Event açıldı! Lokasyon: ${values['lokasyon']}, Arkadaş grubu: ${values['arkadasGrubu']}, Arkadaş getirmek serbest: ${values['arkadasGetirmekSerbestMi'] == radio1.evet ? 'Evet' : 'Hayır'}',
-            ),
-          backgroundColor: Palette.appSwatch.shade700,
-        ),
-    );
-    }
 }

@@ -34,7 +34,7 @@ class FixturePage extends ConsumerWidget {
                     return FixtureBlock(index: index);
                   },
                   separatorBuilder: (context, index) => const SizedBox(
-                    height: 8,
+                    height: 5,
                   ),
                 ),
               ),
@@ -66,7 +66,7 @@ class FixtureBlock extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Palette.appSwatch.shade300,
-            Palette.appSwatch.shade500,
+            Palette.appSwatch.shade400,
           ],
         ),
       ),
@@ -113,7 +113,7 @@ class FixtureBlock extends StatelessWidget {
                 onPressed: () {
                   PersistentNavBarNavigator.pushNewScreen(
                     context,
-                    screen: OpenEventsPage(index: index),
+                    screen: OpenEventsPage(),
                     withNavBar: false, // OPTIONAL VALUE. True by default.
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
