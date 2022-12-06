@@ -150,9 +150,7 @@ class _EventTileState extends ConsumerState<EventTile> {
           selectedTileColor: Palette.appSwatch.shade600,
           selected: ref.watch(selectedTileProvider) == widget.index,
           onTap: () {
-            setState(() {
               ref.read(selectedTileProvider.notifier).state = widget.index;
-            });
           },
         ),
         const SizedBox(
