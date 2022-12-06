@@ -9,14 +9,12 @@ class OpenEventsPage extends ConsumerStatefulWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   _OpenEventsPageState createState() => _OpenEventsPageState();
 }
 
 class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
-  with AutomaticKeepAliveClientMixin{
-
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => false;
 
@@ -25,7 +23,6 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
     ref.refresh(eventsListProvider);
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,20 +66,21 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
                   return ref.refresh(eventsListProvider);
                 },
                 child: ref.watch(eventsListProvider).when(
-                  data: (data) => ListView.builder(
-                    physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                      shrinkWrap: false,
-                      itemBuilder: (context, index) =>
-                          EventContainer(event : data[index], index: index),
-                      itemCount: data.length,
+                      data: (data) => ListView.builder(
+                        physics: AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics()),
+                        shrinkWrap: false,
+                        itemBuilder: (context, index) =>
+                            EventTile(event: data[index], index: index),
+                        itemCount: data.length,
+                      ),
+                      error: (error, stackTrace) {
+                        return const Text('error');
+                      },
+                      loading: () {
+                        return const Center(child: CircularProgressIndicator());
+                      },
                     ),
-                  error: (error, stackTrace) {
-                    return const Text('error');
-                  },
-                  loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
               ),
             ),
           ],
@@ -92,8 +90,8 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
   }
 }
 
-class EventContainer extends ConsumerStatefulWidget {
-  const EventContainer({
+class EventTile extends ConsumerStatefulWidget {
+  const EventTile({
     Key? key,
     required this.event,
     required this.index,
@@ -103,11 +101,10 @@ class EventContainer extends ConsumerStatefulWidget {
   final int index;
 
   @override
-  _EventContainerState createState() => _EventContainerState();
+  _EventTileState createState() => _EventTileState();
 }
 
-class _EventContainerState extends ConsumerState<EventContainer> {
-
+class _EventTileState extends ConsumerState<EventTile> {
   bool selected = false;
 
   @override
@@ -116,15 +113,40 @@ class _EventContainerState extends ConsumerState<EventContainer> {
       children: [
         ListTile(
           tileColor: Palette.appSwatch.shade700,
-          title: Text('Lokasyon: ${widget.event.lokasyon}\nArkadaş getirmek serbest: ${widget.event.arkadasGetirmekSerbestMi ? 'Evet' : 'Hayır'}',
-          style: TextStyle(fontSize: 12, color: Colors.white)),
-          trailing: Text('Grup: ${widget.event.arkadasGrubu}',
-              style: TextStyle(fontSize: 12, color: Colors.white),
+          title: Column(
+            children: [
+              Text('Event: [Event Name]',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
+              SizedBox(height: 8,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Text('${widget.event.lokasyon}',
+                    style: TextStyle(
+                        fontSize: 14, color: Colors.white)),
+                Text('01.15.2023',
+                style: TextStyle(
+                    fontSize: 14, color: Colors.white.withOpacity(0.6))),
+                ],
+              ),
+              SizedBox(height: 5,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '${widget.event.arkadasGetirmekSerbestMi ? 'Arkadaş getirebilirsin' : 'Arkadaş getirme'}',
+                      style: TextStyle(
+                          fontSize: 14, color: Colors.white)),
+                  Text('21.45',
+                      style: TextStyle(
+                          fontSize: 14, color: Colors.white.withOpacity(0.6))),
+                ],
+              ),
+            ],
           ),
-          contentPadding: EdgeInsets.all(12),
+          contentPadding: EdgeInsets.all(15),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(18))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
           selectedTileColor: Palette.appSwatch.shade600,
           selected: ref.watch(selectedTileProvider) == widget.index,
           onTap: () {
@@ -133,7 +155,9 @@ class _EventContainerState extends ConsumerState<EventContainer> {
             });
           },
         ),
-        SizedBox(height: 4,),
+        SizedBox(
+          height: 6,
+        ),
       ],
     );
   }
