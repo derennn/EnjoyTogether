@@ -115,21 +115,21 @@ class _EventTileState extends ConsumerState<EventTile> {
           tileColor: Palette.appSwatch.shade700,
           title: Column(
             children: [
-              Text('Event: [Event Name]',
+              const Text('Event: [Event Name]',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
-              SizedBox(height: 8,),
+              const SizedBox(height: 8,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                 Text('${widget.event.lokasyon}',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 14, color: Colors.white)),
                 Text('01.15.2023',
                 style: TextStyle(
                     fontSize: 14, color: Colors.white.withOpacity(0.6))),
                 ],
               ),
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -144,8 +144,8 @@ class _EventTileState extends ConsumerState<EventTile> {
               ),
             ],
           ),
-          contentPadding: EdgeInsets.all(15),
-          shape: RoundedRectangleBorder(
+          contentPadding: const EdgeInsets.all(15),
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20))),
           selectedTileColor: Palette.appSwatch.shade600,
           selected: ref.watch(selectedTileProvider) == widget.index,
@@ -155,7 +155,7 @@ class _EventTileState extends ConsumerState<EventTile> {
             });
           },
         ),
-        SizedBox(
+        const SizedBox(
           height: 6,
         ),
       ],
