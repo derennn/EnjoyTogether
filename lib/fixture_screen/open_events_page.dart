@@ -67,7 +67,7 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
                 },
                 child: ref.watch(eventsListProvider).when(
                       data: (data) => ListView.builder(
-                        physics: AlwaysScrollableScrollPhysics(
+                        physics: const AlwaysScrollableScrollPhysics(
                             parent: BouncingScrollPhysics()),
                         shrinkWrap: false,
                         itemBuilder: (context, index) =>
@@ -121,12 +121,24 @@ class _EventTileState extends ConsumerState<EventTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Text('${widget.event.lokasyon}',
+                  const Text('[Arkadas adi] acti',
+                      style: TextStyle(
+                          fontSize: 14, color: Colors.white)),
+                  Text('01.15.2023',
+                      style: TextStyle(
+                          fontSize: 14, color: Colors.white.withOpacity(0.6))),
+                ],
+              ),
+              const SizedBox(height: 5,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Text(widget.event.lokasyon,
                     style: const TextStyle(
                         fontSize: 14, color: Colors.white)),
-                Text('01.15.2023',
-                style: TextStyle(
-                    fontSize: 14, color: Colors.white.withOpacity(0.6))),
+                  Text('21.45',
+                      style: TextStyle(
+                          fontSize: 14, color: Colors.white.withOpacity(0.6))),
                 ],
               ),
               const SizedBox(height: 5,),
@@ -134,12 +146,9 @@ class _EventTileState extends ConsumerState<EventTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                      '${widget.event.arkadasGetirmekSerbestMi ? 'Arkadaş getirebilirsin' : 'Arkadaş getirme'}',
-                      style: TextStyle(
+                      widget.event.arkadasGetirmekSerbestMi ? 'Arkadaş getirebilirsin' : 'Arkadaş getirme',
+                      style: const TextStyle(
                           fontSize: 14, color: Colors.white)),
-                  Text('21.45',
-                      style: TextStyle(
-                          fontSize: 14, color: Colors.white.withOpacity(0.6))),
                 ],
               ),
             ],
