@@ -1,3 +1,5 @@
+import 'package:flutter/gestures.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -24,22 +26,23 @@ class NotificationPage extends ConsumerStatefulWidget {
 class _NotificationPageState extends ConsumerState<NotificationPage> {
   String? imagePath;
 
-  Future<String> getImagePath() async{
+  Future<String> getImagePath() async {
     return "https://picsum.photos/200";
   }
 
   void path() async {
-    imagePath = await Future.delayed(const Duration(seconds: 1)).then((value) => getImagePath());
+    imagePath = await Future.delayed(const Duration(seconds: 1))
+        .then((value) => getImagePath());
     setState(() {});
     //print('gorsel geldi');
   }
-
 
   @override
   void initState() {
     getImagePath();
     path();
-    Future.delayed(const Duration(seconds: 3)).then((value) => ref.read(notificationProvider2.notifier).update((state) => !state));
+    Future.delayed(const Duration(seconds: 3)).then((value) =>
+        ref.read(notificationProvider2.notifier).update((state) => !state));
     super.initState();
   }
 
@@ -48,94 +51,133 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
     return Scaffold(
       backgroundColor: Palette.appSwatch.shade500,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 25,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              height: 25,
+            ),
+            Text(
+              'Bildirimler',
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 28),
+            ),
+            const Divider(
+              thickness: 1,
+              color: Colors.grey,
+              height: 25,
+            ),
+            Expanded(
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics()),
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      childCount: 12,
+                      //şimdilik gelen bir veri olmadığı için 7 değerini kullanıyorum
+                      // değer gelmeye başlayınca bunu kullan: childCount: math.max(0, values.length * 2 - 1),
+                      (context, index) {
+                        final int itemIndex = index ~/ 2;
+                        if (index.isEven) {
+                          return NotificationTile(
+                              ref: ref, imagePath: imagePath);
+                        }
+                        return const Divider(
+                          color: Colors.grey,
+                          thickness: 0.5,
+                          indent: 8,
+                          endIndent: 8,
+                          height: 4,
+                        );
+                      },
+                      // semanticIndexCallback: (Widget widget, int localIndex) { if (localIndex.isEven) {return localIndex ~/ 2;} return null;},
+                      // değer geleye başlayınca bunu kullan ^
+                    ),
+                  ),
+                ],
               ),
-              Text('Bildirimler',
-              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 28),
-              ),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-                height: 25,
-              ),
-              ListView.separated(
-                itemCount: 7,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      trailing: AnimatedContainer(
-                        height: 8,
-                        width: 8,
-                        duration: const Duration(milliseconds: 400),
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: ref.watch(notificationProvider2) ? neonGreen : Colors.transparent),
-                      ),
-                      leading: ClipOval(
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(shape: BoxShape.circle),
-                          child: imagePath == null
-                          ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
-                          : Image.network(imagePath!),
-                        ),
-                      ),
-                      title: Text('Alp 19 Aralık GS - FB maçı için event açtı.',
-                      style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                    );
-                  },
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: Colors.grey,
-                    thickness: 0.5,
-                    indent: 8,
-                    endIndent: 8,
-                    height: 4,
-                  );
-                },
-              ),
-              FloatingActionButton(
-                backgroundColor: neonGreen,
-                  onPressed: () {
-                    PersistentNavBarNavigator.pushNewScreen(
-                      context,
-                      screen: Scaffold(
-                        backgroundColor: Palette.appSwatch.shade500,
-                        body: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Center(child: Text('Deneme')),
-                             FloatingActionButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  },
-                               child: const Text('Back',
-                               textAlign: TextAlign.center,),
-                              ),
-                            ],
+            ),
+            FloatingActionButton(
+              backgroundColor: neonGreen,
+              onPressed: () {
+                PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: Scaffold(
+                    backgroundColor: Palette.appSwatch.shade500,
+                    body: SafeArea(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Center(child: Text('Deneme')),
+                          FloatingActionButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Back',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      withNavBar: true, // OPTIONAL VALUE. True by default.
-                      pageTransitionAnimation: PageTransitionAnimation.slideUp,
-                    );
-                  },
-                child: const Text('new page',
-                textAlign: TextAlign.center),
-              ),
-            ],
-          ),
+                    ),
+                  ),
+                  withNavBar: true, // OPTIONAL VALUE. True by default.
+                  pageTransitionAnimation: PageTransitionAnimation.slideUp,
+                );
+              },
+              child: const Text('new page', textAlign: TextAlign.center),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class NotificationTile extends StatelessWidget {
+  const NotificationTile({
+    Key? key,
+    required this.ref,
+    required this.imagePath,
+  }) : super(key: key);
+
+  final WidgetRef ref;
+  final String? imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      trailing: AnimatedContainer(
+        height: 8,
+        width: 8,
+        duration: const Duration(milliseconds: 400),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: ref.watch(notificationProvider2)
+                ? neonGreen
+                : Colors.transparent),
+      ),
+      leading: ClipOval(
+        child: Container(
+          height: 40,
+          width: 40,
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          child: imagePath == null
+              ? const CircularProgressIndicator(
+                  color: Colors.white,
+                )
+              : Image.network(imagePath!),
+        ),
+      ),
+      title: Text(
+        'Alp 19 Aralık GS - FB maçı için event açtı.',
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
     );
   }
 }

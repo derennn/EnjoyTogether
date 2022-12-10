@@ -35,7 +35,7 @@ class DataService {
   Future<List<Event>> getAllEvents() async {
     final response = await http.get(Uri.parse('$baseUrl/events'));
     if (response.statusCode == 200) {
-      final l = jsonDecode(response.body);
+      final l = jsonDecode(utf8.decode(response.bodyBytes));
       return l.map<Event>((e) {
         return Event.fromMap(e);
       }).toList();

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/cupertino.dart';
 import 'fixturepage.dart';
 import 'notificationpage.dart';
 import 'profilepage.dart';
 import 'themecolors.dart';
 
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 late BuildContext testContext;
@@ -45,11 +44,14 @@ class MyApp extends StatelessWidget {
           bodyLarge: TextStyle(fontSize: 22.0, color: Colors.white),
           bodyMedium: TextStyle(fontSize: 18.0, color: Colors.white),
           bodySmall: TextStyle(fontSize: 15.0, color: Colors.white),
+          titleMedium: TextStyle(color: Colors.white),
+          titleSmall: TextStyle(color: Colors.white),
+          titleLarge: TextStyle(color: Colors.white),
         ),
       ),
-      home: LoginScreen(),
+      home: const LoginScreen(),
       initialRoute: "/",
-      routes: {},
+      routes: const {},
     );
   }
 }
@@ -97,7 +99,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  PersistentTabController _controller = PersistentTabController();
+  final PersistentTabController _controller = PersistentTabController();
   bool _hideNavBar = false;
 
   List<Widget> _buildScreens() => [
@@ -143,7 +145,7 @@ class _MainPageState extends State<MainPage> {
           title: "Profile",
           activeColorPrimary: neonGreen,
           inactiveColorPrimary: Colors.white,
-          routeAndNavigatorSettings: RouteAndNavigatorSettings(
+          routeAndNavigatorSettings: const RouteAndNavigatorSettings(
             initialRoute: "/",
             routes: {
               //"/first": (final context) => const MainScreen2(),
@@ -157,7 +159,7 @@ class _MainPageState extends State<MainPage> {
           title: "Profile",
           activeColorPrimary: neonGreen,
           inactiveColorPrimary: Colors.white,
-          routeAndNavigatorSettings: RouteAndNavigatorSettings(
+          routeAndNavigatorSettings: const RouteAndNavigatorSettings(
             initialRoute: "/",
             routes: {
               //"/first": (final context) => const MainScreen2(),
