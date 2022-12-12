@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'fixturepage.dart';
+import 'fixture_screen/fixturepage.dart';
 import 'notificationpage.dart';
 import 'profilepage.dart';
 import 'themecolors.dart';
@@ -181,11 +181,11 @@ class _MainPageState extends State<MainPage> {
           navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
               ? 0.0
               : kBottomNavigationBarHeight,
-          bottomScreenMargin: 0,
+          bottomScreenMargin: kBottomNavigationBarHeight,
           selectedTabScreenContext: (final context) {
             testContext = context!;
           },
-          backgroundColor: Palette.appSwatch.shade500,
+          backgroundColor: Palette.appSwatch.shade700,
           hideNavigationBar: _hideNavBar,
           decoration:
               const NavBarDecoration(colorBehindNavBar: Palette.appSwatch),

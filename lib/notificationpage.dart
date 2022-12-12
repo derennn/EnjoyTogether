@@ -54,19 +54,47 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(
-              height: 25,
-            ),
-            Text(
-              'Bildirimler',
-              style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                  fontSize: 28),
+            DecoratedBox(
+              decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Palette.appSwatch.shade300,
+                  Palette.appSwatch.shade500,
+                ],
+              ),
+             ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 48),
+                      Text(
+                        'Bildirimler',
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            fontSize: 28),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.notifications_none_outlined,
+                          color: Colors.white,),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 25),
+                ],
+              ),
             ),
             const Divider(
               thickness: 1,
               color: Colors.grey,
-              height: 25,
+              height: 5,
             ),
             Expanded(
               child: CustomScrollView(

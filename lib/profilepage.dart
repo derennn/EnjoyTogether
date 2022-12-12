@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'fixturepage.dart';
+import 'fixture_screen/fixturepage.dart';
 import 'themecolors.dart';
 
 class ProfilePage extends StatefulWidget {

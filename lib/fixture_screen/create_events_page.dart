@@ -65,11 +65,14 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
           isSaving = true;
         });
         await convertToEventMapAndSave();
+        if (!mounted) return;
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Event açıldı! Lokasyon: ${values['lokasyon']}, Arkadaş grubu: ${values['arkadasGrubu']}, Arkadaş getirmek serbest: ${values['arkadasGetirmekSerbestMi'] ? 'Evet' : 'Hayır'}',
+              'Event açıldı! Lokasyon: ${values['lokasyon']}, Arkadaş grubu: ${values['arkadasGrubu']}, '
+                  'Arkadaş getirmek serbest: ${values['arkadasGetirmekSerbestMi'] ? 'Evet' : 'Hayır'}, '
+                  'Açıldığı tarih: ${values['acildigiTarih']}, Açan Kişi: ${values['acanKisi']}'
             ),
             backgroundColor: Palette.appSwatch.shade700,
           ),
@@ -125,7 +128,19 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      SizedBox(
+                        height: 40,
+                        child: BackButton(
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
                   Center(
                     child: RichText(
                       text: TextSpan(
@@ -143,7 +158,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                 ],
               ),
             ),
@@ -308,6 +323,9 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                   final formState = _formKey.currentState;
                                   if (formState == null) return print('formState == null');
                                   if (formState.validate() == true) {
+                                    String now = DateTime.now().toIso8601String();
+                                    values['acildigiTarih'] = now;
+                                    values['acanKisi'] = 'Deren';
                                     formState.save();
                                     saveFunc(values);
                                   }

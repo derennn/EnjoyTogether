@@ -49,7 +49,19 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
                   ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 35),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          SizedBox(
+                            height: 40,
+                            child: BackButton(
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
                       Center(
                         child: Text('Açık Eventler',
                             style: TextStyle(
@@ -112,6 +124,7 @@ class EventTile extends ConsumerStatefulWidget {
 }
 
 class _EventTileState extends ConsumerState<EventTile> {
+
   bool selected = false;
   int joinedFriends = 8;
 
@@ -124,35 +137,35 @@ class _EventTileState extends ConsumerState<EventTile> {
           title: Column(
             children: [
               const Text('Event: [Event Name]',
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
               const SizedBox(
                 height: 8,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('[Arkadas adi] acti - ${widget.event.arkadasGrubu}',
+                  Text('${widget.event.acanKisi} tarafından açıldı', // - ${widget.event.arkadasGrubu} ile paylaştı,
                       style: const TextStyle(fontSize: 14, color: Colors.white)),
-                  Text('01.15.2023',
+                  Text('Maç Tarihi',
                       style: TextStyle(
                           fontSize: 14, color: Colors.white.withOpacity(0.6))),
                 ],
               ),
               const SizedBox(
-                height: 8,
+                height: 14,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(widget.event.lokasyon,
                       style: const TextStyle(fontSize: 14, color: Colors.white)),
-                  Text('21.45',
+                  Text('Maç saati',
                       style: TextStyle(
                           fontSize: 14, color: Colors.white.withOpacity(0.6))),
                 ],
               ),
               const SizedBox(
-                height: 3,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,7 +213,7 @@ class _EventTileState extends ConsumerState<EventTile> {
                     ),
                   ),
                   joinedFriends > 4
-                  ? Text(' +${joinedFriends - 4}', style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)
+                  ? Text(' +${joinedFriends - 4}', style: const TextStyle(color: Colors.grey), textAlign: TextAlign.end,)
                   : const SizedBox(),
                 ],
               ),

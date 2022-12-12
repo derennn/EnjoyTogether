@@ -29,6 +29,7 @@ class FixturePage extends ConsumerWidget {
             children: <Widget>[
               Expanded(
                 child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                   itemCount: ref.read(fixtureBlockProvider),
                   itemBuilder: (context, index) {
                     return FixtureBlock(index: index);
