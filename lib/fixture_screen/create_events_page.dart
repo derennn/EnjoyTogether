@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agalarla_mac/themecolors.dart';
-import 'package:agalarla_mac/event/event_class.dart';
+import 'package:agalarla_mac/basic_classes/event_class.dart';
 
 class FixtureEventButtonHero extends StatelessWidget {
   const FixtureEventButtonHero({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agalarla_mac/event/event_class.dart';
+import 'package:agalarla_mac/basic_classes/event_class.dart';
 import 'package:intl/intl.dart';
 
 class OpenEventFocused extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agalarla_mac/services/data_services.dart';
-import 'package:agalarla_mac/event/event_class.dart';
+import 'package:agalarla_mac/basic_classes/event_class.dart';
 
 class EventsRepository extends ChangeNotifier{
   final DataService dataService;
@@ -19,7 +19,7 @@ class EventsRepository extends ChangeNotifier{
 
   Future<List<Event>> getAllEvents() async{
    events = await dataService.getAllEvents();
-    return events;
+   return events;
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'fixture_screen/fixturepage.dart';
 import 'themecolors.dart';
@@ -24,138 +25,127 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-        backgroundColor: Palette.appSwatch.shade500,
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      constraints: BoxConstraints(),
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.person_add_alt_outlined,
-                        color: Colors.white,
-                        size: 28,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          backgroundColor: Palette.appSwatch.shade500,
+          body: SafeArea(
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.person_add_alt_outlined,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      constraints: BoxConstraints(),
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                        size: 28,
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.settings,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const InkWell(
-                  child: CircleAvatar(
-                    radius: 60,
-                    child: FractionallySizedBox(
-                      widthFactor: 0.65,
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text('DB'),
+                    ],
+                  ),
+                  const InkWell(
+                    child: CircleAvatar(
+                      radius: 60,
+                      child: FractionallySizedBox(
+                        widthFactor: 0.65,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text('DB'),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Text('Deren Bayar'),
-                const SizedBox(
-                  height: 8,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)))
+                  const SizedBox(
+                    height: 10,
                   ),
-                  onPressed: () {},
-                  child: Text('Profili Düzenle'),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          whichPage = !whichPage;
-                        });
-                      },
-                      child: Text(
-                        'Eventlerim',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                  const Text('Deren Bayar'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8)))),
+                    onPressed: () {},
+                    child: const Text('Profili Düzenle'),
+                  ),
+                  const SizedBox(height: 10,),
+                  const TabBar(
+                    labelColor: Palette.neonGreenShades,
+                    indicatorColor: Palette.neonGreenShades,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: <Tab>[
+                      Tab(text: 'Event Geçmişim'),
+                      Tab(text: 'Arkadaşlarım'),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        ListView.separated(
+                          itemCount: 8,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text('Aktivite X',
+                                  style:
+                                  Theme.of(context).textTheme.bodySmall),
+                              trailing: const Icon(Icons.add, color: Colors.white),
+                              contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 10),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const Divider(
+                              color: Colors.white,
+                              endIndent: 10,
+                              indent: 10,
+                              height: 0,
+                            );
+                          },
+                        ),
+                        ListView.separated(
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text('Ecem',
+                                  style:
+                                  Theme.of(context).textTheme.bodySmall),
+                              trailing: const Icon(Icons.add, color: Colors.white),
+                              contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 10),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const Divider(
+                              color: Colors.white,
+                              endIndent: 10,
+                              indent: 10,
+                              height: 0,
+                            );
+                          },
+                        ),
+                      ]
                     ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          whichPage = !whichPage;
-                        });
-                      },
-                      child: Text(
-                        'Arkadaşlarım',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                Expanded(
-                    child: whichPage == true
-                        ? ListView.separated(
-                            itemCount: 8,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text('Aktivite X',
-                                    style: Theme.of(context).textTheme.bodySmall),
-                                trailing: Icon(Icons.add, color: Colors.white),
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                color: Colors.white,
-                                endIndent: 10,
-                                indent: 10,
-                                height: 0,
-                              );
-                            },
-                          )
-                        : ListView.separated(
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text('Ecem',
-                                    style: Theme.of(context).textTheme.bodySmall),
-                                trailing: Icon(Icons.add, color: Colors.white),
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                color: Colors.white,
-                                endIndent: 10,
-                                indent: 10,
-                                height: 0,
-                              );
-                            },
-                          )),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ));
+      ),
+    );
   }
 }

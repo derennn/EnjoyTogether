@@ -1,7 +1,10 @@
+import 'package:agalarla_mac/basic_classes/event_class.dart';
+import 'package:agalarla_mac/repositories/events_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'fixture_screen/fixturepage.dart';
+import 'package:agalarla_mac/repositories/notifications_repository.dart';
 import 'notificationpage.dart';
 import 'profilepage.dart';
 import 'themecolors.dart';
@@ -140,8 +143,8 @@ class _MainPageState extends State<MainPage> {
             activeColorPrimary: neonGreen,
             inactiveColorPrimary: Colors.white),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.notifications),
-          inactiveIcon: const Icon(Icons.notifications_none_outlined),
+          icon: const NotificationCountBadge(icon: Icon(Icons.notifications), boxColor: Palette.neonGreenShades),
+          inactiveIcon: const NotificationCountBadge(icon: Icon(Icons.notifications_none_outlined), boxColor: Colors.white),
           title: "Profile",
           activeColorPrimary: neonGreen,
           inactiveColorPrimary: Colors.white,
@@ -198,5 +201,48 @@ class _MainPageState extends State<MainPage> {
           ),
           navBarStyle: NavBarStyle.style5,
         ));
+  }
+}
+
+class NotificationCountBadge extends ConsumerWidget {
+  const NotificationCountBadge({
+    required this.icon,
+    required this.boxColor,
+    Key? key,
+  }) : super(key: key);
+
+  final Icon icon;
+  final Color boxColor;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<List<Event>> uncheckedNotifCount = ref.watch(eventsListProvider);
+    return Stack(
+      fit: StackFit.passthrough,
+      children: <Widget>[
+        icon,
+        Positioned(
+          right: 0,
+          top: 5,
+          child: Container(
+            padding: const EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: boxColor,
+              border: Border.all(width: 1.5, color: Palette.appSwatch.shade700,),
+              shape: BoxShape.circle,),
+            constraints: const BoxConstraints(
+                minHeight: 12,
+                minWidth: 12
+            ),
+            height: 16,
+            width: 16,
+            child: Text('$uncheckedNotifCount',
+              style: TextStyle(fontSize: 9,fontWeight: FontWeight.w500, color: Palette.appSwatch.shade700),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
