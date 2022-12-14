@@ -85,11 +85,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 10,),
                   const TabBar(
+                    indicatorSize: TabBarIndicatorSize.label,
                     labelColor: Palette.neonGreenShades,
                     indicatorColor: Palette.neonGreenShades,
                     unselectedLabelColor: Colors.grey,
                     tabs: <Tab>[
-                      Tab(text: 'Event Geçmişim'),
+                      Tab(text: 'Takip ettiğin ligler'),
                       Tab(text: 'Arkadaşlarım'),
                     ],
                   ),
@@ -99,13 +100,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         ListView.separated(
                           itemCount: 8,
                           itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text('Aktivite X',
-                                  style:
-                                  Theme.of(context).textTheme.bodySmall),
-                              trailing: const Icon(Icons.add, color: Colors.white),
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 10),
+                            return ExpansionTile(
+                              title: Text('Aktivite X', style: Theme.of(context).textTheme.bodySmall),
+                              iconColor: Colors.white,
+                              collapsedIconColor: Colors.grey,
+                              tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+                              childrenPadding: const EdgeInsets.symmetric(horizontal: 10),
+                              children: const [
+                                ListTile(leading: Text('aktivite 1')),
+                              ],
                             );
                           },
                           separatorBuilder: (context, index) {
@@ -120,13 +123,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         ListView.separated(
                           itemCount: 5,
                           itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text('Ecem',
-                                  style:
-                                  Theme.of(context).textTheme.bodySmall),
-                              trailing: const Icon(Icons.add, color: Colors.white),
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 10),
+                            return ExpansionTile(
+                              title: Text('Ecem', style: Theme.of(context).textTheme.bodySmall),
+                              iconColor: Colors.white,
+                              collapsedIconColor: Colors.grey,
+                              backgroundColor: Palette.appSwatch.shade300,
+                              tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+                              childrenPadding: const EdgeInsets.symmetric(horizontal: 10),
+                              children: [
+                                ListTile(leading: Text('Ortak grup:', style: Theme.of(context).textTheme.bodySmall), dense: true,),
+                              ],
                             );
                           },
                           separatorBuilder: (context, index) {

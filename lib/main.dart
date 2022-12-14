@@ -1,5 +1,6 @@
 import 'package:agalarla_mac/basic_classes/event_class.dart';
 import 'package:agalarla_mac/repositories/events_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,21 +25,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Palette.appSwatch,
-                )
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Palette.appSwatch,
-                )
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Palette.appSwatch,
-                )
-            ),
+          border: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Palette.appSwatch,
+          )),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Palette.appSwatch,
+          )),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Palette.appSwatch,
+          )),
           hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
         ),
         primarySwatch: Palette.appSwatch,
@@ -143,8 +141,12 @@ class _MainPageState extends State<MainPage> {
             activeColorPrimary: neonGreen,
             inactiveColorPrimary: Colors.white),
         PersistentBottomNavBarItem(
-          icon: const NotificationCountBadge(icon: Icon(Icons.notifications), boxColor: Palette.neonGreenShades),
-          inactiveIcon: const NotificationCountBadge(icon: Icon(Icons.notifications_none_outlined), boxColor: Colors.white),
+          icon: const NotificationCountBadge(
+              icon: Icon(Icons.notifications),
+              boxColor: Palette.neonGreenShades),
+          inactiveIcon: const NotificationCountBadge(
+              icon: Icon(Icons.notifications_none_outlined),
+              boxColor: Colors.white),
           title: "Profile",
           activeColorPrimary: neonGreen,
           inactiveColorPrimary: Colors.white,
@@ -176,31 +178,30 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: PersistentTabView(
-          context,
-          controller: _controller,
-          screens: _buildScreens(),
-          items: _navBarsItems(),
-          resizeToAvoidBottomInset: true,
-          navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
-              ? 0.0
-              : kBottomNavigationBarHeight,
-          bottomScreenMargin: kBottomNavigationBarHeight,
-          selectedTabScreenContext: (final context) {
-            testContext = context!;
-          },
-          backgroundColor: Palette.appSwatch.shade700,
-          hideNavigationBar: _hideNavBar,
-          decoration:
-              const NavBarDecoration(colorBehindNavBar: Palette.appSwatch),
-          itemAnimationProperties: const ItemAnimationProperties(
-            duration: Duration(milliseconds: 400),
-            curve: Curves.ease,
-          ),
-          screenTransitionAnimation: const ScreenTransitionAnimation(
-            animateTabTransition: true,
-          ),
-          navBarStyle: NavBarStyle.style5,
-        ));
+      context,
+      controller: _controller,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      resizeToAvoidBottomInset: true,
+      navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
+          ? 0.0
+          : kBottomNavigationBarHeight,
+      bottomScreenMargin: kBottomNavigationBarHeight,
+      selectedTabScreenContext: (final context) {
+        testContext = context!;
+      },
+      backgroundColor: Palette.appSwatch.shade700,
+      hideNavigationBar: _hideNavBar,
+      decoration: const NavBarDecoration(colorBehindNavBar: Palette.appSwatch),
+      itemAnimationProperties: const ItemAnimationProperties(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        animateTabTransition: true,
+      ),
+      navBarStyle: NavBarStyle.style5,
+    ));
   }
 }
 
@@ -216,7 +217,7 @@ class NotificationCountBadge extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<Event>> uncheckedNotifCount = ref.watch(eventsListProvider);
+    final uncheckedNotifCount = ref.watch(notificationsProvider);
     return Stack(
       fit: StackFit.passthrough,
       children: <Widget>[
@@ -224,25 +225,127 @@ class NotificationCountBadge extends ConsumerWidget {
         Positioned(
           right: 0,
           top: 5,
-          child: Container(
-            padding: const EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              color: boxColor,
-              border: Border.all(width: 1.5, color: Palette.appSwatch.shade700,),
-              shape: BoxShape.circle,),
-            constraints: const BoxConstraints(
-                minHeight: 12,
-                minWidth: 12
-            ),
-            height: 16,
-            width: 16,
-            child: Text('$uncheckedNotifCount',
-              style: TextStyle(fontSize: 9,fontWeight: FontWeight.w500, color: Palette.appSwatch.shade700),
-              textAlign: TextAlign.center,
-            ),
+          child: uncheckedNotifCount.when(
+            data: (data) {
+              return Container(
+                padding: const EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: boxColor,
+                  border: Border.all(
+                    width: 1.5,
+                    color: Palette.appSwatch.shade700,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                constraints: const BoxConstraints(minHeight: 12, minWidth: 12),
+                height: 15,
+                width: 15,
+                child: Text(
+                  '${data.length}',
+                  style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w500,
+                      color: Palette.appSwatch.shade700),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+            error: (error, stackTrace) {
+              return const SizedBox();
+            },
+            loading: () {
+              return SizedBox(
+                height: 15,
+                width: 15,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      color: Palette.appSwatch.shade700,
+                      shape: BoxShape.circle),
+                  child: const Padding(
+                    padding: EdgeInsets.all(3),
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],
     );
   }
 }
+
+/*
+class NotificationCountBadge extends ConsumerWidget {
+  const NotificationCountBadge({
+    required this.icon,
+    required this.boxColor,
+    Key? key,
+  }) : super(key: key);
+
+  final Icon icon;
+  final Color boxColor;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final uncheckedNotifCount = ref.watch(eventsListProvider.future);
+    return Stack(
+      fit: StackFit.passthrough,
+      children: <Widget>[
+        icon,
+        Positioned(
+          right: 0,
+          top: 5,
+          child: FutureBuilder(
+            future: uncheckedNotifCount,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Container(
+                  padding: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: boxColor,
+                    border: Border.all(
+                      width: 1.5,
+                      color: Palette.appSwatch.shade700,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  constraints:
+                      const BoxConstraints(minHeight: 12, minWidth: 12),
+                  height: 16,
+                  width: 16,
+                  child: Text(
+                    '${snapshot.data!.length}',
+                    style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w500,
+                        color: Palette.appSwatch.shade700),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return const SizedBox();
+              } else {
+                return SizedBox(
+                  height: 8,
+                  width: 8,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Palette.appSwatch.shade700, shape: BoxShape.circle),
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 1,
+                      ),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+*/
