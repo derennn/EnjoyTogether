@@ -39,11 +39,14 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
 
   @override
   void initState() {
+  Future.delayed(Duration.zero).then((value) => ref.read(notificationsProvider.notifier).userOpenedNotifScreen());
+    super.initState();
     getImagePath();
     path();
-    Future.delayed(const Duration(seconds: 3)).then((value) =>
-        ref.read(notificationProvider2.notifier).update((state) => !state));
-    super.initState();
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      return ref.read(notificationProvider2.notifier).update((state) => !state);
+    });
+
   }
 
   @override

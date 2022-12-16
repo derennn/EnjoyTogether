@@ -22,8 +22,12 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
 
   @override
   void initState() {
-    ref.refresh(eventsListProvider);
     super.initState();
+    if (!ref.exists(eventsListProvider)) {
+      return;
+    } else {
+      ref.refresh(eventsListProvider);
+    }
   }
 
   @override
@@ -81,7 +85,7 @@ class _OpenEventsPageState extends ConsumerState<OpenEventsPage>
                 backgroundColor: Colors.transparent,
                 color: Colors.white,
                 onRefresh: () async {
-                  return ref.refresh(eventsListProvider);
+                  return ref.invalidate(eventsListProvider);
                 },
                 child: ref.watch(eventsListProvider).when(
                   data: (data) => ListView.builder(

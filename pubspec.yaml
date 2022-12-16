@@ -29,6 +29,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/gutter.png
+    - assets/Premier_League_Logo.png
+    - assets/super_lig_logo.png
+    - assets/ligue1_uber_eats_logo.png
+    - assets/bundesliga_logo.png
 
   fonts:
     - family: Roboto

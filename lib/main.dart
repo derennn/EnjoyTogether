@@ -1,5 +1,4 @@
 import 'package:agalarla_mac/basic_classes/event_class.dart';
-import 'package:agalarla_mac/repositories/events_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -42,9 +41,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Palette.appSwatch,
         fontFamily: 'Roboto',
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontSize: 22.0, color: Colors.white),
-          bodyMedium: TextStyle(fontSize: 18.0, color: Colors.white),
-          bodySmall: TextStyle(fontSize: 15.0, color: Colors.white),
+          bodyLarge: TextStyle(fontSize: 21.0, color: Colors.white),
+          bodyMedium: TextStyle(fontSize: 16.0, color: Colors.white),
+          bodySmall: TextStyle(fontSize: 14.0, color: Colors.white),
           titleMedium: TextStyle(color: Colors.white),
           titleSmall: TextStyle(color: Colors.white),
           titleLarge: TextStyle(color: Colors.white),
@@ -219,34 +218,41 @@ class NotificationCountBadge extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final uncheckedNotifCount = ref.watch(notificationsProvider);
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.passthrough,
       children: <Widget>[
         icon,
         Positioned(
-          right: 0,
+          right: (uncheckedNotifCount.value != null)
+              ? (uncheckedNotifCount.value!.length < 99)
+                  ? 0
+                  : -5
+              : 0,
           top: 5,
           child: uncheckedNotifCount.when(
             data: (data) {
-              return Container(
-                padding: const EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  color: boxColor,
-                  border: Border.all(
-                    width: 1.5,
-                    color: Palette.appSwatch.shade700,
+              return Visibility(
+                visible: data.isNotEmpty,
+                child: Container(
+                  padding: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    color: boxColor,
+                    border: Border.all(
+                      width: 1.5,
+                      color: Palette.appSwatch.shade700,
+                    ),
+                    shape: BoxShape.rectangle,
                   ),
-                  shape: BoxShape.circle,
-                ),
-                constraints: const BoxConstraints(minHeight: 12, minWidth: 12),
-                height: 15,
-                width: 15,
-                child: Text(
-                  '${data.length}',
-                  style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w500,
-                      color: Palette.appSwatch.shade700),
-                  textAlign: TextAlign.center,
+                  constraints: const BoxConstraints(minHeight: 15, minWidth: 15),
+                  child: Text(
+                    '${data.length}',
+                    style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w500,
+                        color: Palette.appSwatch.shade700),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               );
             },

@@ -174,8 +174,9 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.bodySmall,
                           decoration: const InputDecoration(
+                              hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
                               hintText: 'Event Nerede Olacak?'),
                           validator: (value) {
                             if (value?.isEmpty == true) {
@@ -193,7 +194,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                           hint: const Text(
                             'Hangi Arkadaş Grubu ile Paylaşılsın?',
                             style:
-                                const TextStyle(color: Colors.grey, fontSize: 15),
+                                const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                           decoration: InputDecoration(
                             border: Theme.of(context).inputDecorationTheme.border,
