@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:agalarla_mac/basic_classes/leagues.dart';
+import 'package:agalarla_mac/basic_classes/leagues_class.dart';
+import 'package:agalarla_mac/repositories/leagues_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'themecolors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -111,8 +113,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('Abone olunan ligler',
-                              style: Theme.of(context).textTheme.bodySmall,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text('Abone olunan ligler',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const AddLeagueButton(),
+                                ],
                               ),
                               SubscribedLeagueChipWrap(),
                             ],
@@ -154,21 +163,50 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class SubscribedLeagueChipWrap extends StatefulWidget {
+class AddLeagueButton extends ConsumerWidget {
+  const AddLeagueButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Palette.appSwatch.shade100,
+          shape: const StadiumBorder(),
+      ),
+        onPressed: () {
+          ref.read(userSubscribedLeaguesRepository.notifier).update((state) {
+           state.add(League('add ile eklendi', AssetImage('assets/Premier_League_Logo.png')));
+           return state;
+          });
+        },
+        child: Text(
+          'add+',
+          style: TextStyle(fontSize: 14, color: neonGreen),
+        ),
+    );
+  }
+}
+
+class SubscribedLeagueChipWrap extends ConsumerStatefulWidget {
   const SubscribedLeagueChipWrap({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SubscribedLeagueChipWrap> createState() => _SubscribedLeagueChipWrapState();
+  _SubscribedLeagueChipWrapState createState() => _SubscribedLeagueChipWrapState();
 }
 
-class _SubscribedLeagueChipWrapState extends State<SubscribedLeagueChipWrap> {
+class _SubscribedLeagueChipWrapState extends ConsumerState<SubscribedLeagueChipWrap> {
 
-  final List<League> _leagues = <League>[
-    League('Premier League', AssetImage('assets/Premier_League_Logo.png')),
-    League('Süper Lig', AssetImage('assets/super_lig_logo.png')),
-  ];
+  List<League> _leagues = <League>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _leagues = ref.watch(userSubscribedLeaguesRepository);
+  }
 
   Iterable<Widget> get leagueChips {
     return _leagues.map((League league) {
@@ -182,8 +220,11 @@ class _SubscribedLeagueChipWrapState extends State<SubscribedLeagueChipWrap> {
             });
           });
         },
-        avatar: Image(
-          image: league.image,
+        avatar: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: Image(
+            image: league.image,
+          ),
         ),
         label: Text(league.name, style: TextStyle(color: Palette.appSwatch.shade800, fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),),
         backgroundColor: const Color(0xffa7aaaf),
