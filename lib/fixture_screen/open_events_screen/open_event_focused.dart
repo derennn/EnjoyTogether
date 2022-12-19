@@ -82,7 +82,7 @@ class _OpenEventFocusedState extends State<OpenEventFocused> {
             ),
           ),
           const SizedBox(height: 8,),
-          const Text('"Gelmeyen orospu çocuğudur"', style: TextStyle(color: Colors.grey, fontSize: 16,)),
+          const Text('"Gelmeyen benle selamı kessin"', style: TextStyle(color: Colors.grey, fontSize: 16,)),
           const SizedBox(height: 8,),
           const Divider(
             color: Colors.grey,

@@ -33,5 +33,5 @@ class Palette {
   );
 }
 
-Color primaryDarkBlue = Color(0xff242b38);
-Color neonGreen = Color(0xff1be2c7);
+Color primaryDarkBlue = const Color(0xff242b38);
+Color neonGreen = const Color(0xff1be2c7);

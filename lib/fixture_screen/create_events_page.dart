@@ -204,7 +204,6 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                             focusedBorder: Theme.of(context)
                                 .inputDecorationTheme
                                 .focusedBorder,
-                            hintText: 'Event nerede olacak?',
                           ),
                           dropdownColor: Palette.appSwatch.shade300,
                           items: [
@@ -236,7 +235,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                           initialValue: _radioSecilen,
                           builder: (field) {
                             return Padding(
-                              padding: EdgeInsets.only(top: 14, left: 14),
+                              padding: const EdgeInsets.only(top: 14, left: 14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -245,7 +244,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                   ),
                                   AnimatedContainer(
                                     curve: Curves.ease,
-                                        duration: Duration(milliseconds: 300),
+                                        duration: const Duration(milliseconds: 300),
                                         height: field.hasError ? 35 : 0,
                                         child: AnimatedCrossFade(
                                           firstChild: Align(
@@ -255,7 +254,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                           ),
                                           secondChild: const SizedBox(),
                                           crossFadeState: field.hasError ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                          duration: Duration(milliseconds: 300),
+                                          duration: const Duration(milliseconds: 300),
                                         ),
                                       ),
                                   ListTile(

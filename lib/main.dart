@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'fixture_screen/fixturepage.dart';
 import 'package:agalarla_mac/repositories/notifications_repository.dart';
 import 'notificationpage.dart';
-import 'profilepage.dart';
+import 'profile_screen/profilepage.dart';
 import 'themecolors.dart';
 
 void main() {
