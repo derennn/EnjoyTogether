@@ -33,6 +33,7 @@ flutter:
     - assets/super_lig_logo.png
     - assets/ligue1_uber_eats_logo.png
     - assets/bundesliga_logo.png
+    - assets/image_not_found.png
 
   fonts:
     - family: Roboto

@@ -16,13 +16,14 @@ class SubscribedLeagueChipWrap extends ConsumerStatefulWidget {
 class _SubscribedLeagueChipWrapState extends ConsumerState<SubscribedLeagueChipWrap> {
 
   Iterable<Widget> get leagueChips {
-    return ref.watch(userSubscribedLeaguesRepository).map((League league) {
+    final leagueList = ref.watch(userSubscribedLeaguesRepository);
+    return leagueList.map((SportsLeague league) {
       return Chip(
         padding: const EdgeInsets.all(4) + const EdgeInsets.symmetric(horizontal: 4),
         deleteIcon: Icon(Icons.close, size: 20, color: Palette.appSwatch.shade300,),
         onDeleted: () {
           ref.watch(userSubscribedLeaguesRepository.notifier).update((state) {
-            List<League> newState = state.where((league) => league != state.last).toList();
+            List<SportsLeague> newState = state.where((item) => item != league).toList();
             return newState;
           });
         },
@@ -32,7 +33,7 @@ class _SubscribedLeagueChipWrapState extends ConsumerState<SubscribedLeagueChipW
             image: league.image,
           ),
         ),
-        label: Text(league.name, style: TextStyle(color: Palette.appSwatch.shade800, fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),),
+        label: Text(league.league, style: TextStyle(color: Palette.appSwatch.shade800, fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),),
         backgroundColor: const Color(0xffa7aaaf),
       );
     });
