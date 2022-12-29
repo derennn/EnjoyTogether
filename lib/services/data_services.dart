@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:agalarla_mac/event/event_class.dart';
+import 'package:agalarla_mac/basic_classes/event_class.dart';
 
 class DataService {
   final String baseUrl = 'https://638a2a0dc5356b25a2142b60.mockapi.io/';
@@ -35,7 +35,7 @@ class DataService {
   Future<List<Event>> getAllEvents() async {
     final response = await http.get(Uri.parse('$baseUrl/events'));
     if (response.statusCode == 200) {
-      final l = jsonDecode(response.body);
+      final l = jsonDecode(utf8.decode(response.bodyBytes));
       return l.map<Event>((e) {
         return Event.fromMap(e);
       }).toList();

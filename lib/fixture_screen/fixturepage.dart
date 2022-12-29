@@ -4,7 +4,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:agalarla_mac/repositories/fixtureblocks_repository.dart';
 import 'package:agalarla_mac/themecolors.dart';
 import 'package:agalarla_mac/fixture_screen/create_events_page.dart';
-import 'package:agalarla_mac/fixture_screen/open_events_page.dart';
+import 'package:agalarla_mac/fixture_screen/open_events_screen/open_events_page.dart';
 
 class FixturePage extends ConsumerWidget {
   const FixturePage({
@@ -29,6 +29,7 @@ class FixturePage extends ConsumerWidget {
             children: <Widget>[
               Expanded(
                 child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                   itemCount: ref.read(fixtureBlockProvider),
                   itemBuilder: (context, index) {
                     return FixtureBlock(index: index);

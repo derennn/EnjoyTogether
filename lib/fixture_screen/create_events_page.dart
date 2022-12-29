@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agalarla_mac/themecolors.dart';
-import 'package:agalarla_mac/event/event_class.dart';
+import 'package:agalarla_mac/basic_classes/event_class.dart';
 
 class FixtureEventButtonHero extends StatelessWidget {
   const FixtureEventButtonHero({
@@ -65,11 +65,14 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
           isSaving = true;
         });
         await convertToEventMapAndSave();
+        if (!mounted) return;
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Event açıldı! Lokasyon: ${values['lokasyon']}, Arkadaş grubu: ${values['arkadasGrubu']}, Arkadaş getirmek serbest: ${values['arkadasGetirmekSerbestMi'] ? 'Evet' : 'Hayır'}',
+              'Event açıldı! Lokasyon: ${values['lokasyon']}, Arkadaş grubu: ${values['arkadasGrubu']}, '
+                  'Arkadaş getirmek serbest: ${values['arkadasGetirmekSerbestMi'] ? 'Evet' : 'Hayır'}, '
+                  'Açıldığı tarih: ${values['acildigiTarih']}, Açan Kişi: ${values['acanKisi']}'
             ),
             backgroundColor: Palette.appSwatch.shade700,
           ),
@@ -125,7 +128,19 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      SizedBox(
+                        height: 40,
+                        child: BackButton(
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
                   Center(
                     child: RichText(
                       text: TextSpan(
@@ -143,7 +158,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                 ],
               ),
             ),
@@ -159,8 +174,9 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFormField(
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.bodySmall,
                           decoration: const InputDecoration(
+                              hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
                               hintText: 'Event Nerede Olacak?'),
                           validator: (value) {
                             if (value?.isEmpty == true) {
@@ -178,7 +194,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                           hint: const Text(
                             'Hangi Arkadaş Grubu ile Paylaşılsın?',
                             style:
-                                const TextStyle(color: Colors.grey, fontSize: 15),
+                                const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                           decoration: InputDecoration(
                             border: Theme.of(context).inputDecorationTheme.border,
@@ -188,7 +204,6 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                             focusedBorder: Theme.of(context)
                                 .inputDecorationTheme
                                 .focusedBorder,
-                            hintText: 'Event nerede olacak?',
                           ),
                           dropdownColor: Palette.appSwatch.shade300,
                           items: [
@@ -220,7 +235,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                           initialValue: _radioSecilen,
                           builder: (field) {
                             return Padding(
-                              padding: EdgeInsets.only(top: 14, left: 14),
+                              padding: const EdgeInsets.only(top: 14, left: 14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -229,7 +244,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                   ),
                                   AnimatedContainer(
                                     curve: Curves.ease,
-                                        duration: Duration(milliseconds: 300),
+                                        duration: const Duration(milliseconds: 300),
                                         height: field.hasError ? 35 : 0,
                                         child: AnimatedCrossFade(
                                           firstChild: Align(
@@ -239,7 +254,7 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                           ),
                                           secondChild: const SizedBox(),
                                           crossFadeState: field.hasError ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                          duration: Duration(milliseconds: 300),
+                                          duration: const Duration(milliseconds: 300),
                                         ),
                                       ),
                                   ListTile(
@@ -308,6 +323,9 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                                   final formState = _formKey.currentState;
                                   if (formState == null) return print('formState == null');
                                   if (formState.validate() == true) {
+                                    String now = DateTime.now().toIso8601String();
+                                    values['acildigiTarih'] = now;
+                                    values['acanKisi'] = 'Deren';
                                     formState.save();
                                     saveFunc(values);
                                   }
